@@ -1,0 +1,30 @@
+{
+  "name": "express-ntlm-reverse-proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "start-docker": "bash ./docker-start.sh"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "date-fns": "^2.22.1",
+    "express": "^4.17.1",
+    "express-ntlm": "^2.6.0",
+    "helmet": "^4.6.0",
+    "http-proxy-middleware": "^2.0.0",
+    "stack-trace": "^0.0.10",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "7.2.0",
+    "eslint-config-airbnb": "18.2.1",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-jsx-a11y": "6.4.1",
+    "eslint-plugin-react": "7.21.5",
+    "eslint-plugin-react-hooks": "1.7.0"
+  }
+}
