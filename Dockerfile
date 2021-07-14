@@ -28,13 +28,13 @@ ENV LOGGING_LEVEL ${LOGGING_LEVEL}
 ENV REVERSE_PROXY_URI_CONTEXT ${REVERSE_PROXY_URI_CONTEXT}
 ENV REVERSE_PROXY_TARGET_HOST ${REVERSE_PROXY_TARGET_HOST}
 
-ADD src src
-ADD index.js index.js
-ADD package.json package.json
+COPY src src
+COPY index.js index.js
+COPY package.json package.json
 
-RUN yarn install --pure-lockfile --production --proxy "${HTTP_PROXY}" --https-proxy "${HTTPS_PROXY}"
+RUN yarn install --pure-lockfile --production --proxy "${HTTP_PROXY}" --https-proxy "${HTTPS_PROXY}" && yarn cache clean
 
 # https://github.com/Yelp/dumb-init
-RUN apk add dumb-init
+RUN apk --no-cache add dumb-init
 
 CMD ["/usr/bin/dumb-init", "node", "."]
