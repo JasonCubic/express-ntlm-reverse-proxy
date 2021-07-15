@@ -38,15 +38,15 @@ services:
 
 
   # # https://github.com/joeferner/redis-commander
-  jwt-demo-redis-commander:
-    image: rediscommander/redis-commander:latest
-    container_name: express-ntlm-reverse-proxy-redis-commander
-    environment:
-      - REDIS_HOSTS=local:express-ntlm-reverse-proxy-redis:6379
-    ports:
-      - 9094:8081
-    networks:
-      - intranet
+  # jwt-demo-redis-commander:
+  #   image: rediscommander/redis-commander:latest
+  #   container_name: express-ntlm-reverse-proxy-redis-commander
+  #   environment:
+  #     - REDIS_HOSTS=local:express-ntlm-reverse-proxy-redis:6379
+  #   ports:
+  #     - 9094:8081
+  #   networks:
+  #     - intranet
 
 
 networks:
