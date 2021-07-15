@@ -8,7 +8,6 @@ const logger = winston.createLogger({
   transports: [
     new winston.transports.Console(),
   ],
-  level: config.LOGGING_LEVEL,
 });
 
 function convertTimezone(date, locale, tzString) {
@@ -27,94 +26,24 @@ function transformArg(arg) {
   return arg;
 }
 
-function error(...args) {
-  const trace = stackTrace.get(); // https://github.com/felixge/node-stack-trace
-  logger.log({
-    level: 'error',
-    payload: args.map((val) => transformArg(val)),
-    time: `${format(convertTimezone(new Date(), config.LOG_LOCALE, config.LOG_TIMEZONE), config.LOG_LOCAL_DATE_FORMAT)} (${config.LOG_TIMEZONE})`,
-    timeISO: formatISO(new Date()),
-    file: trace[1].getFileName(),
-    line: trace[1].getLineNumber(),
-  });
-}
-
-function warn(...args) {
-  const trace = stackTrace.get(); // https://github.com/felixge/node-stack-trace
-  logger.log({
-    level: 'warn',
-    payload: args.map((val) => transformArg(val)),
-    time: `${format(convertTimezone(new Date(), config.LOG_LOCALE, config.LOG_TIMEZONE), config.LOG_LOCAL_DATE_FORMAT)} (${config.LOG_TIMEZONE})`,
-    timeISO: formatISO(new Date()),
-    file: trace[1].getFileName(),
-    line: trace[1].getLineNumber(),
-  });
-}
-
-function info(...args) {
-  const trace = stackTrace.get(); // https://github.com/felixge/node-stack-trace
-  logger.log({
-    level: 'info',
-    payload: args.map((val) => transformArg(val)),
-    time: `${format(convertTimezone(new Date(), config.LOG_LOCALE, config.LOG_TIMEZONE), config.LOG_LOCAL_DATE_FORMAT)} (${config.LOG_TIMEZONE})`,
-    timeISO: formatISO(new Date()),
-    file: trace[1].getFileName(),
-    line: trace[1].getLineNumber(),
-  });
-}
-
-function verbose(...args) {
-  const trace = stackTrace.get(); // https://github.com/felixge/node-stack-trace
-  logger.log({
-    level: 'verbose',
-    payload: args.map((val) => transformArg(val)),
-    time: `${format(convertTimezone(new Date(), config.LOG_LOCALE, config.LOG_TIMEZONE), config.LOG_LOCAL_DATE_FORMAT)} (${config.LOG_TIMEZONE})`,
-    timeISO: formatISO(new Date()),
-    file: trace[1].getFileName(),
-    line: trace[1].getLineNumber(),
-  });
-}
-
-function debug(...args) {
-  const trace = stackTrace.get(); // https://github.com/felixge/node-stack-trace
-  logger.log({
-    level: 'debug',
-    payload: args.map((val) => transformArg(val)),
-    time: `${format(convertTimezone(new Date(), config.LOG_LOCALE, config.LOG_TIMEZONE), config.LOG_LOCAL_DATE_FORMAT)} (${config.LOG_TIMEZONE})`,
-    timeISO: formatISO(new Date()),
-    file: trace[1].getFileName(),
-    line: trace[1].getLineNumber(),
-  });
-}
-
-function silly(...args) {
-  const trace = stackTrace.get(); // https://github.com/felixge/node-stack-trace
-  logger.log({
-    level: 'silly',
-    payload: args.map((val) => transformArg(val)),
-    time: `${format(convertTimezone(new Date(), config.LOG_LOCALE, config.LOG_TIMEZONE), config.LOG_LOCAL_DATE_FORMAT)} (${config.LOG_TIMEZONE})`,
-    timeISO: formatISO(new Date()),
-    file: trace[1].getFileName(),
-    line: trace[1].getLineNumber(),
-  });
-}
-
-function noLevel(...args) {
-  const trace = stackTrace.get(); // https://github.com/felixge/node-stack-trace
-  logger.log({
-    payload: args.map((val) => transformArg(val)),
-    time: `${format(convertTimezone(new Date(), config.LOG_LOCALE, config.LOG_TIMEZONE), config.LOG_LOCAL_DATE_FORMAT)} (${config.LOG_TIMEZONE})`,
-    timeISO: formatISO(new Date()),
-    file: trace[1].getFileName(),
-    line: trace[1].getLineNumber(),
-  });
+function handleLogging(payload, trace, level = '') {
+  const logObj = {};
+  if (level && typeof level.valueOf() === 'string' && level.length > 0) {
+    logObj.level = level;
+  }
+  logObj.payload = payload;
+  logObj.time = `${format(convertTimezone(new Date(), config.LOG_LOCALE, config.LOG_TIMEZONE), config.LOG_LOCAL_DATE_FORMAT)} (${config.LOG_TIMEZONE})`;
+  logObj.timeISO = formatISO(new Date());
+  logObj.file = trace[1].getFileName();
+  logObj.line = trace[1].getLineNumber();
+  logger.log(logObj);
 }
 
 // log levels: https://github.com/winstonjs/winston#logging
-module.exports.error = error;
-module.exports.warn = warn;
-module.exports.info = info;
-module.exports.verbose = verbose;
-module.exports.debug = debug;
-module.exports.silly = silly;
-module.exports.log = noLevel;
+module.exports.error = (...args) => handleLogging(args.map((val) => transformArg(val)), stackTrace.get(), 'error');
+module.exports.warn = (...args) => handleLogging(args.map((val) => transformArg(val)), stackTrace.get(), 'warn');
+module.exports.info = (...args) => handleLogging(args.map((val) => transformArg(val)), stackTrace.get(), 'info');
+module.exports.verbose = (...args) => handleLogging(args.map((val) => transformArg(val)), stackTrace.get(), 'verbose');
+module.exports.debug = (...args) => handleLogging(args.map((val) => transformArg(val)), stackTrace.get(), 'debug');
+module.exports.silly = (...args) => handleLogging(args.map((val) => transformArg(val)), stackTrace.get(), 'silly');
+module.exports.log = (...args) => handleLogging(args.map((val) => transformArg(val)), stackTrace.get());

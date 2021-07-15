@@ -1,0 +1,53 @@
+---
+services:
+
+  express-ntlm-reverse-proxy:
+    container_name: express-ntlm-reverse-proxy
+    build:
+      context: ./
+      args:
+        - NODE_ENV
+        - HTTP_PROXY
+        - HTTPS_PROXY
+        - EXPRESS_HOST
+        - EXPRESS_PORT
+        - MAX_CLUSTER_FORKS
+        - DOMAIN_CONTROLLER_ARR
+        - LOG_LOCALE
+        - LOG_TIMEZONE
+        - LOG_LOCAL_DATE_FORMAT
+        - LOGGING_LEVEL
+        - REVERSE_PROXY_URI_CONTEXT
+        - REVERSE_PROXY_TARGET_HOST
+        - SESSION_SECRET
+        - REDIS_HOST
+        - REDIS_PORT
+        - RATE_LIMIT_WINDOW_MS
+        - RATE_LIMIT_MAX
+        - RATE_LIMIT_MESSAGE
+    ports:
+      - 8080:8080
+    networks:
+      - intranet
+
+  express-ntlm-reverse-proxy-redis:
+    image: redis:6.0.10-alpine
+    container_name: express-ntlm-reverse-proxy-redis
+    networks:
+      - intranet
+
+
+  # # https://github.com/joeferner/redis-commander
+  jwt-demo-redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: express-ntlm-reverse-proxy-redis-commander
+    environment:
+      - REDIS_HOSTS=local:express-ntlm-reverse-proxy-redis:6379
+    ports:
+      - 9094:8081
+    networks:
+      - intranet
+
+
+networks:
+  intranet:

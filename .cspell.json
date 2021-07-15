@@ -1,0 +1,22 @@
+{
+    "version": "0.1",
+    "ignorePaths": [
+        "**/node_modules/**",
+        "**/vscode-extension/**",
+        "**/.git/**",
+        ".vscode",
+        "package-lock.json",
+        "report",
+        "**/.nuxt/**",
+        "*.min.js"
+    ],
+    "language": "en",
+    "words": [
+        "domaincontroller",
+        "domainname",
+        "ldap",
+        "linebreak",
+        "ntlm",
+        "resave"
+    ]
+}

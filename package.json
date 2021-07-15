@@ -11,11 +11,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "connect-redis": "^6.0.0",
     "date-fns": "^2.22.1",
     "express": "^4.17.1",
     "express-ntlm": "^2.6.0",
+    "express-rate-limit": "^5.3.0",
+    "express-session": "^1.17.2",
     "helmet": "^4.6.0",
     "http-proxy-middleware": "^2.0.0",
+    "ioredis": "^4.27.6",
+    "rate-limit-redis": "^2.1.0",
     "stack-trace": "^0.0.10",
     "winston": "^3.3.3"
   },

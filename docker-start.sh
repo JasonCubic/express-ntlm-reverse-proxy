@@ -6,19 +6,15 @@ if [ ! -f .env ]; then
   exit 1
 fi
 
-# https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836#gistcomment-3625311
-# https://stackoverflow.com/questions/43108359/how-to-remove-all-special-characters-in-linux-text/43108392#43108392
 set -a
-source <(cat .env | sed -e 's/[^[:print:]\t]//g')
+# shellcheck source=.env
+# shellcheck disable=SC1091
+source <(sed <.env -e 's/[^[:print:]\t]//g')
 set +a
 
-docker stop express-ntlm-reverse-proxy
+docker compose down --volumes --remove-orphans
 
-docker rm -f express-ntlm-reverse-proxy
-
-docker rmi -f express-ntlm-reverse-proxy
-
-docker build --no-cache \
+docker compose build --no-cache \
   --build-arg NODE_ENV=production \
   --build-arg HTTP_PROXY="$HTTP_PROXY" \
   --build-arg HTTPS_PROXY="$HTTPS_PROXY" \
@@ -32,6 +28,11 @@ docker build --no-cache \
   --build-arg LOGGING_LEVEL="$LOGGING_LEVEL" \
   --build-arg REVERSE_PROXY_URI_CONTEXT="$REVERSE_PROXY_URI_CONTEXT" \
   --build-arg REVERSE_PROXY_TARGET_HOST="$REVERSE_PROXY_TARGET_HOST" \
-  -t express-ntlm-reverse-proxy .
+  --build-arg SESSION_SECRET="$SESSION_SECRET" \
+  --build-arg REDIS_HOST="$REDIS_HOST" \
+  --build-arg REDIS_PORT="$REDIS_PORT" \
+  --build-arg RATE_LIMIT_WINDOW_MS="$RATE_LIMIT_WINDOW_MS" \
+  --build-arg RATE_LIMIT_MAX="$RATE_LIMIT_MAX" \
+  --build-arg RATE_LIMIT_MESSAGE="$RATE_LIMIT_MESSAGE"
 
-docker run --name express-ntlm-reverse-proxy -p $EXPRESS_PORT:$EXPRESS_PORT express-ntlm-reverse-proxy
+docker compose up

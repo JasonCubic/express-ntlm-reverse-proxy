@@ -10,5 +10,6 @@ module.exports = {
   extends: 'airbnb',
   rules: {
     'linebreak-style': 'off',
+    'max-len': ['warn', { code: 175 }],
   },
 };
