@@ -8,6 +8,7 @@ const logger = winston.createLogger({
   transports: [
     new winston.transports.Console(),
   ],
+  level: config.LOGGING_LEVEL,
 });
 
 function convertTimezone(date, locale, tzString) {

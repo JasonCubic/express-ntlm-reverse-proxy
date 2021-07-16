@@ -18,6 +18,7 @@
         "linebreak",
         "ntlm",
         "resave",
-        "ssaaa"
+        "ssaaa",
+        "unsign"
     ]
 }
