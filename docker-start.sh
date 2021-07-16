@@ -33,6 +33,8 @@ docker compose build --no-cache \
   --build-arg REDIS_PORT="$REDIS_PORT" \
   --build-arg RATE_LIMIT_WINDOW_MS="$RATE_LIMIT_WINDOW_MS" \
   --build-arg RATE_LIMIT_MAX="$RATE_LIMIT_MAX" \
-  --build-arg RATE_LIMIT_MESSAGE="$RATE_LIMIT_MESSAGE"
+  --build-arg RATE_LIMIT_MESSAGE="$RATE_LIMIT_MESSAGE" \
+  --build-arg SESSION_HEADER_TOKEN_FIELD_NAME="$SESSION_HEADER_TOKEN_FIELD_NAME" \
+  --build-arg REVERSE_PROXY_CREATE_TOKEN_URL="$REVERSE_PROXY_CREATE_TOKEN_URL"
 
 docker compose up

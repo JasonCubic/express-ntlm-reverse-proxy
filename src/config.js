@@ -18,6 +18,8 @@ function config() {
     RATE_LIMIT_WINDOW_MS: parseInt((process.env?.RATE_LIMIT_WINDOW_MS ?? 60000), 10),
     RATE_LIMIT_MAX: parseInt((process.env?.RATE_LIMIT_MAX ?? 10), 10),
     RATE_LIMIT_MESSAGE: process.env?.RATE_LIMIT_MESSAGE ?? 'Too many requests, please try again later.',
+    SESSION_HEADER_TOKEN_FIELD_NAME: process.env?.SESSION_HEADER_TOKEN_FIELD_NAME ?? 'override-session-id',
+    REVERSE_PROXY_CREATE_TOKEN_URL: process.env?.REVERSE_PROXY_CREATE_TOKEN_URL ?? '',
   };
 }
 

@@ -17,6 +17,7 @@
         "ldap",
         "linebreak",
         "ntlm",
-        "resave"
+        "resave",
+        "ssaaa"
     ]
 }
