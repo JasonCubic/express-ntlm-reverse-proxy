@@ -37,7 +37,8 @@ function authenticateBySessionBeforeNtlm(req, res, next) {
     const userIsNtlmAuthenticated = requestingUserAuthenticated === true && requestingUser && typeof requestingUser.valueOf() === 'string' && requestingUser.length > 0;
     if (userIsNtlmAuthenticated !== true) {
       log.info('ERROR: auth failed', req.ntlm);
-      res.status(200).json({ errors: ['auth failed'] });
+      req.session.destroy();
+      res.sendStatus(401);
       return;
     }
     req.session.UserName = requestingUser;

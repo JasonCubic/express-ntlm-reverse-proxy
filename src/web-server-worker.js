@@ -43,6 +43,7 @@ function userSuccessfullyAuthenticatedByNtlm(req) {
 function handleCreateTokenRoute(req, res) {
   if (userSuccessfullyAuthenticatedByNtlm(req) === false) {
     log.info('ERROR: user tried to create a token and did not successfully authenticate using NTLM', req?.session);
+    req.session.destroy();
     res.sendStatus(401);
     return;
   }
@@ -54,7 +55,9 @@ function handleCreateTokenRoute(req, res) {
 function webserverWorker() {
   const app = express();
   app.use(helmet()); // https://helmetjs.github.io/
+
   const redisClient = getRedisClient();
+
   const limiter = new RateLimit({
     store: new RateLimitRedisStore({ client: redisClient }),
     windowMs: config.RATE_LIMIT_WINDOW_MS,
@@ -63,8 +66,13 @@ function webserverWorker() {
     onLimitReached: (req) => log.info('user hit rate limit.  req.socket.remoteAddress: ', req?.socket?.remoteAddress ?? 'undefined'),
   });
   app.use(limiter); // https://github.com/nfriedly/express-rate-limit
+
   const redisSessionStore = getRedisSessionStore(redisClient);
-  app.use((req, res, next) => overrideSessionCookieWithHeaderSessionId(req, res, next, redisSessionStore));
+
+  if (config.REVERSE_PROXY_CREATE_TOKEN_URL.length > 0) {
+    app.use((req, res, next) => overrideSessionCookieWithHeaderSessionId(req, res, next, redisSessionStore));
+  }
+
   app.use(session({
     // https://github.com/tj/connect-redis#options
     store: redisSessionStore,
